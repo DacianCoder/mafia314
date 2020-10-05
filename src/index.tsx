@@ -1,21 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
 import { IntlProvider } from 'react-intl'
-import store from './store'
+import { ThemeProvider } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
 
 import './index.css'
 
 import messages from './i18n/en.json'
 
 import App from './App'
+import theme from './config/theme'
 
 ReactDOM.render(
-  <Provider store={store}>
+  <ThemeProvider theme={theme}>
     <IntlProvider locale="en" messages={messages}>
+      <CssBaseline />
       <App />
     </IntlProvider>
-  </Provider>,
+  </ThemeProvider>,
   document.getElementById('root')
 )
 
