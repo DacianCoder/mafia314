@@ -31,7 +31,7 @@ The template provides basic Redux configuration using [Redux Toolkit](https://re
 
 For the moment the template provides a basic implementation of final-form library, in the future more libraries will be added  
 
-### Final Form [project](https://final-form.org/react)
+### REMOVED ~~Final Form~~ [project](https://final-form.org/react)
 Basic implementation contains a [FormWrapper](/src/form/final-form/FormWrapper.tsx) that should be used to declare a form  
 A TextField, CheckboxField and ConditionField is provided by default
 You can remove final form by using the command `./bin/clean_project.sh final-form`
@@ -71,7 +71,7 @@ The template extends CRA ESLint rules with a custom set, tailored for the reason
 Eslint rules are commented for your convenience feel free to tweak or remove them inside `.eslintrc`  
 Import order not configured, a plugin can be found [here](https://www.npmjs.com/package/eslint-plugin-ordered-imports) 
 
-## Open API Tools generator [project](https://github.com/OpenAPITools/openapi-generator)
+## REMOVED ~~Open API Tools generator~~ [project](https://github.com/OpenAPITools/openapi-generator)
 The provided template uses fetch, if you wish to modify it, please consult the project, axios/superagent are also suported
  
 By providing a valid endpoint for `swagger.json` retrieval in the `.env` file the script found at `bin/install_api.sh`
