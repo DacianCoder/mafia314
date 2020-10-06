@@ -1,3 +1,5 @@
 {
-  "mock": "mock"
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "home": "Home"
 }
