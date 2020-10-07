@@ -12,7 +12,7 @@
 removeOpenApi () {
   rm ./bin/install_api.sh
   rm ./src/api/configureApi.ts
-  rm -rf ./src/generated
+  rm -rf ./src/api/generated
   sed -i '/declare type GlobalFetch = WindowOrWorkerGlobalScope/d' src/react-app-env.d.ts
   sed -i 's/## Open API Tools generator/## REMOVED ~~Open API Tools generator~~/g' README.md
 }
