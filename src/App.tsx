@@ -1,18 +1,22 @@
 import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
-import { About } from './pages/About'
 import { Navbar } from './components/navbar/Navbar'
-import { Home } from './pages/Home'
+import { WelcomePage } from './pages/WelcomePage'
+import { useAuthListener } from './hooks/useAuthListener'
+import { ROUTES } from './constants/routes'
+import { HomePage } from './pages/HomePage'
 
 const App: React.FC = () => {
+  useAuthListener()
+
   return (
     <BrowserRouter>
       <Navbar />
-      <div className="container">
+      <div>
         <Switch>
-          <Route path="/" component={Home} exact />
-          <Route path="/about" component={About} />
+          <Route path={ROUTES.WELCOME} component={WelcomePage} exact />
+          <Route path={ROUTES.HOME} component={HomePage} exact />
         </Switch>
       </div>
     </BrowserRouter>
