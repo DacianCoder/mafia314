@@ -59,7 +59,7 @@ export const generateUserDocument = async (user) => {
 }
 
 // @ts-ignore
-const getUserDocument = async (uid) => {
+const getUserDocument: (uid: string) => firebase.User = async (uid) => {
   if (!uid) return null
   try {
     const userDocument = await firestore.doc(`${COLLECTION.USERS}/${uid}`).get()

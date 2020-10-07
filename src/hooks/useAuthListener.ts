@@ -9,7 +9,6 @@ import { LOGGED_IN_COOKIE } from '../api/constants'
 export const useAuthListener = () => {
   useEffect(() => {
     auth.onAuthStateChanged(async (userAuth) => {
-      console.log(userAuth)
       if (!userAuth) {
         return localStorage.removeItem(LOGGED_IN_COOKIE)
       }
@@ -17,7 +16,7 @@ export const useAuthListener = () => {
 
       localStorage.setItem(
         LOGGED_IN_COOKIE,
-        JSON.stringify(user?.uid && { id: user?.uid })
+        JSON.stringify(user?.uid && { id: user?.uid, photoURL: user?.photoURL })
       )
     })
   }, [])

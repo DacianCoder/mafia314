@@ -7,4 +7,5 @@ export enum COLLECTION {
 // maybe move this somewhere else?
 export enum REALTIME_DB {
   ADMIN_USERS = 'adminUsers',
+  USERS = 'users',
 }
