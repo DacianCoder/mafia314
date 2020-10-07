@@ -52,8 +52,11 @@ const GameContainer: FC<{ users: IUser[]; index?: number }> = ({
   if (ctx && users) {
     users.forEach((user) => {
       const img1 = new Image()
-      img1.onload = () =>
+      img1.onload = () => {
         ctx.drawImage(img1, 0, 0, 800, 800, user.x, user.y, 50, 50)
+        ctx.shadowColor = 'red'
+        ctx.shadowBlur = 15
+      }
       img1.src = getCookieSliceOr(LOGGED_IN_COOKIE)?.photoURL
     })
   }

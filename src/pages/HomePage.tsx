@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Box, Paper } from '@material-ui/core'
 import GameContainer from '../components/game/GameContainer'
 import { IUser } from '../models/User'
@@ -27,12 +27,37 @@ export function HomePage() {
     [users?.length]
   )
 
+  useEffect(() => {
+    fireDB
+      .ref(`${REALTIME_DB.USERS}`)
+      .transaction((existingUsers) => {
+        const alreadyRegistered = existingUsers?.find(
+          (user: { id: any }) =>
+            user.id === getCookieSliceOr(LOGGED_IN_COOKIE)?.id
+        )
+        console.log(alreadyRegistered)
+        if (alreadyRegistered) {
+          return existingUsers
+        }
+        return [
+          ...(existingUsers ?? []),
+          {
+            id: getCookieSliceOr(LOGGED_IN_COOKIE)?.id,
+            photoURL: getCookieSliceOr(LOGGED_IN_COOKIE)?.photoURL,
+            x: (existingUsers?.length ?? 0) * 10,
+            y: (existingUsers?.length ?? 0) * 10,
+          },
+        ]
+      })
+      .then(() => console.log(`Added user`))
+  }, [])
+
   return (
     <Box>
       <h1>you are logged</h1>
       <Box display="flex" justifyContent="center">
         <Paper elevation={4}>
-          {users && <GameContainer {...{ users, index }} />}
+          {users && users.length && <GameContainer {...{ users, index }} />}
         </Paper>
       </Box>
     </Box>
