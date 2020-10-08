@@ -7,8 +7,8 @@ import Button from '@material-ui/core/Button'
 import { Box } from '@material-ui/core'
 import navbarStyles from './navbarStyles'
 import DynamicFormattedMessage from '../common/ui/DynamicFormattedMessage'
-import { signOutWithGoogle } from '../../api/firebase'
 import { ROUTES } from '../../constants/routes'
+import { signOutWithGoogle } from '../../api/auth'
 
 export const Navbar: React.FC = () => {
   const styles = navbarStyles()

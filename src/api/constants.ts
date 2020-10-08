@@ -1,10 +1,17 @@
 export const LOGGED_IN_COOKIE = 'MAFIA314_LOGGED_IN_COOKIE'
 
+/**
+ * Collections on Cloud Firestore
+ */
 export enum COLLECTION {
   USERS = 'users',
 }
 
-// maybe move this somewhere else?
+/**
+ * Slices of data on Realtime Database
+ */
 export enum REALTIME_DB {
-  ADMIN_USERS = 'adminUsers',
+  USERS = 'users',
+  GAME_CONFIG = 'gameConfig',
+  LATE_USERS = 'lateUsers',
 }

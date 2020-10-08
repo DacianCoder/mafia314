@@ -1,24 +1,28 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-import { auth, generateUserDocument } from '../api/firebase'
 import { LOGGED_IN_COOKIE } from '../api/constants'
+import { registerUserToGame, generateUserDocument } from '../api'
+import { auth } from '../api/auth'
 
 /**
- * Hook used to init watcher of authentication
+ * Watch the current authentication object from firebase
  */
 export const useAuthListener = () => {
+  const [isLogged, setIsLogged] = useState(false)
+
   useEffect(() => {
     auth.onAuthStateChanged(async (userAuth) => {
-      console.log(userAuth)
       if (!userAuth) {
+        setIsLogged(false)
         return localStorage.removeItem(LOGGED_IN_COOKIE)
       }
-      const user = await generateUserDocument(userAuth)
 
-      localStorage.setItem(
-        LOGGED_IN_COOKIE,
-        JSON.stringify(user?.uid && { id: user?.uid })
-      )
+      const user = await generateUserDocument(userAuth)
+      await registerUserToGame(user)
+      setIsLogged(true)
+      localStorage.setItem(LOGGED_IN_COOKIE, JSON.stringify(user))
     })
   }, [])
+
+  return isLogged
 }
