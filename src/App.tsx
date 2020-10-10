@@ -19,8 +19,8 @@ const App: React.FC = () => {
     <>
       <Navbar />
       <Switch>
-        <Route path={ROUTES.HOME} component={HomePage} exact />
         <Route path={ROUTES.ADMIN} component={AdminPage} exact />
+        <Route path={ROUTES.HOME} component={HomePage} />
       </Switch>
     </>
   )

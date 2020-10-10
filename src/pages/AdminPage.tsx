@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -9,15 +9,16 @@ import {
   Theme,
 } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
+import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore'
 import { isUserAdmin } from '../utils'
 import { ROUTES } from '../constants/routes'
-import { fireDB } from '../api/config'
 import { REALTIME_DB } from '../api/constants'
-import { IUser } from '../interfaces'
 import { UsersList } from '../components/molecule/UsersList'
 import DynamicFormattedMessage from '../components/common/ui/DynamicFormattedMessage'
-import { IGameConfig, INITIAL_GAME_CONFIG } from '../constants/game'
 import { GameStatusBoard } from '../components/molecule/GameStatusBoard'
+import { useLoadGameData } from '../hooks/UseLoadGameData'
+import { fireDB } from '../api/config'
+import { INITIAL_GAME_CONFIG } from '../constants/game'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,39 +34,16 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export function AdminPage() {
-  const [users, setUsers] = useState<IUser[]>([])
-  const [lateUsers, setLateUsers] = useState([])
-  const [gameConfig, setGameConfig] = useState<IGameConfig | null>(null)
   const history = useHistory()
-
   const classes = useStyles()
 
-  useEffect(() => {
-    setTimeout(
-      () =>
-        setGameConfig(
-          (prev: IGameConfig | null) => prev || INITIAL_GAME_CONFIG
-        ),
-      2000
-    )
-    const onChangeUsers = fireDB
-      .ref(REALTIME_DB.USERS)
-      .on('value', (remoteUsers) => setUsers(remoteUsers.val() || []))
+  const { users, lateUsers, gameConfig } = useLoadGameData()
 
-    const onChangeLateUsers = fireDB
-      .ref(REALTIME_DB.LATE_USERS)
-      .on('value', (remoteUsers) => setLateUsers(remoteUsers.val() || []))
-
-    const onChangeGameConfig = fireDB
+  const onHardReset = async () => {
+    await fireDB
       .ref(REALTIME_DB.GAME_CONFIG)
-      .on('value', (config) => setGameConfig(config.val() || null))
-
-    return () => {
-      fireDB.ref(REALTIME_DB.USERS).off('value', onChangeUsers)
-      fireDB.ref(REALTIME_DB.LATE_USERS).off('value', onChangeLateUsers)
-      fireDB.ref(REALTIME_DB.GAME_CONFIG).off('value', onChangeGameConfig)
-    }
-  }, [])
+      .transaction((_: any) => INITIAL_GAME_CONFIG || _)
+  }
 
   if (!isUserAdmin()) {
     history.push(ROUTES.HOME)
@@ -74,6 +52,7 @@ export function AdminPage() {
 
   return (
     <div>
+      <SettingsBackupRestoreIcon onClick={onHardReset} fontSize="large" />
       <Grid>
         <Box marginTop={5}>
           {!gameConfig ? (
@@ -81,7 +60,7 @@ export function AdminPage() {
               <LinearProgress />
             </Box>
           ) : (
-            <GameStatusBoard gameConfig={gameConfig} />
+            <GameStatusBoard {...{ users, gameConfig }} />
           )}
         </Box>
       </Grid>

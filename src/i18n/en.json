@@ -5,6 +5,15 @@
   "admin": "Admin",
   "appTitle": "Mafia 3.14",
   "users": "Users",
+  "round": "Round",
+  "status": "Status",
+  "game.map": "Map",
+  "game.notStarted": "Not started",
+  "game.running": "Running",
+  "game.frozen": "Frozen",
+  "game.devs": "Developers",
+  "game.qa": "QA",
+  "game.hackers": "Hackers",
   "map.muresHq": "Mures HQ",
   "lateUsers": "Late users"
 }

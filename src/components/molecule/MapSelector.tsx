@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
   createStyles,
   FormControl,
+  InputLabel,
   MenuItem,
   Select,
   Theme,
@@ -35,9 +36,9 @@ export const MapSelector: React.FC<{ gameConfig: IGameConfig }> = ({
   gameConfig,
 }) => {
   const classes = useStyles()
-  const [selectedMap, setSelectedMap] = useState<ElementType<
-    typeof MAPS_TO_PLAY
-  > | null>(null)
+  const [selectedMap, setSelectedMap] = useState<
+    ElementType<typeof MAPS_TO_PLAY> | ''
+  >('')
   const isGameStarted = gameConfig && gameConfig.round !== GAME_NOT_STARTED
   const changeMap = async (value: ElementType<typeof MAPS_TO_PLAY>) => {
     await fireDB.ref(REALTIME_MAP_SLICE).transaction(() => value)
@@ -58,14 +59,13 @@ export const MapSelector: React.FC<{ gameConfig: IGameConfig }> = ({
       className={classes.formControl}
       disabled={isGameStarted || MAPS_TO_PLAY.length === 1}
     >
+      <DynamicFormattedMessage id="game.map" tag={InputLabel} />
       <Select
         value={selectedMap}
         onChange={(e) =>
           changeMap(e.target?.value as ElementType<typeof MAPS_TO_PLAY>)
         }
-        displayEmpty
         className={classes.selectEmpty}
-        inputProps={{ 'aria-label': 'Without label' }}
       >
         {MAPS_TO_PLAY.map((mapId) => (
           <MenuItem id={`map.${mapId}`} key={mapId} value={mapId}>

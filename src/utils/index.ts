@@ -34,7 +34,7 @@ export const isUserAdmin = () => {
  * @param users
  * @param uid
  */
-const getUserWithId = (users: IUser[], uid: string) => {
+export const getUserWithId = (users: IUser[], uid: string) => {
   return users?.find((user) => user && uid === user.uid)
 }
 
@@ -71,9 +71,26 @@ export const mapGoogleUser = ({
  * @param users
  * @param user
  */
-export function getOrConcantUser(users: IUser[], user: IUser): IUser[] {
+export const getOrConcantUser = (users: IUser[] = [], user: IUser): IUser[] => {
   if (!getUserWithId(users, user.uid)) {
-    return [...(users || []), mapGoogleUser(user)]
+    return [...users, mapGoogleUser(user)]
   }
   return users
+}
+
+/**
+ * Move user with given uid from array {@param from} to array {@param to}
+ * @param uid
+ * @param from
+ * @param to
+ */
+export const moveUserFromTo = (
+  uid: string,
+  from: IUser[] = [],
+  to: IUser[] = []
+): [IUser[], IUser[]] => {
+  const fromUser = getUserWithId(from, uid)
+  if (fromUser && !getUserWithId(to, uid)) to.push(fromUser)
+
+  return [from.filter((user) => !(user && uid === user.uid)), to]
 }
