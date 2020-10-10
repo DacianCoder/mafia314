@@ -1,4 +1,6 @@
 import { IUser } from '../interfaces'
+import { LOGGED_IN_COOKIE } from '../api/constants'
+import { ROLE } from '../constants/game'
 
 /**
  * Return value stored at {@param itemPath} on {@link localStorage}
@@ -7,15 +9,24 @@ import { IUser } from '../interfaces'
  * @param itemPath
  * @param defaultValue
  */
-export const getCookieSliceOr = (
-  itemPath: string,
+export const getCookieSliceOr = <T>(
+  itemPath: string = LOGGED_IN_COOKIE,
   defaultValue: any = null
 ) => {
   try {
-    return JSON.parse(localStorage.getItem(itemPath) || '')
+    return JSON.parse(localStorage.getItem(itemPath) || '') as T
   } catch (e) {
     return defaultValue
   }
+}
+
+/**
+ * Return true if the current logged user is an admin
+ */
+export const isUserAdmin = () => {
+  const user = getCookieSliceOr<IUser>()
+
+  return user?.isAdmin ?? false
 }
 
 /**
@@ -35,8 +46,23 @@ const getUserWithId = (users: IUser[], uid: string) => {
  * @param displayName
  * @param email
  */
-export const mapGoogleUser = ({ uid, photoURL, displayName, email }: any) => {
-  return { uid, photoURL, x: 0, y: 0, displayName, email }
+export const mapGoogleUser = ({
+  uid,
+  photoURL,
+  displayName,
+  email,
+  isAdmin,
+}: any) => {
+  return {
+    uid,
+    photoURL,
+    x: 0,
+    y: 0,
+    displayName,
+    email,
+    role: ROLE.UNASSIGNED,
+    isAdmin: isAdmin ?? false,
+  }
 }
 
 /**

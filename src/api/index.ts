@@ -44,7 +44,7 @@ export const registerUserToGame = async (user?: IUser) => {
     return
   }
   const config = (await fireDB.ref(REALTIME_DB.GAME_CONFIG).once('value')).val()
-  if (config?.round === GAME_NOT_STARTED) {
+  if (!config || config?.round === GAME_NOT_STARTED) {
     await fireDB
       .ref(REALTIME_DB.USERS)
       .transaction((users) => getOrConcantUser(users, user))

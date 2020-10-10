@@ -9,6 +9,7 @@ import navbarStyles from './navbarStyles'
 import DynamicFormattedMessage from '../common/ui/DynamicFormattedMessage'
 import { ROUTES } from '../../constants/routes'
 import { signOutWithGoogle } from '../../api/auth'
+import { isUserAdmin } from '../../utils'
 
 export const Navbar: React.FC = () => {
   const styles = navbarStyles()
@@ -19,6 +20,14 @@ export const Navbar: React.FC = () => {
       <Toolbar className={styles.toolbar}>
         <Typography variant="h6">Mafia 314</Typography>
         <Box>
+          {isUserAdmin() && (
+            <DynamicFormattedMessage
+              id="admin"
+              tag={Button}
+              component={NavLink}
+              to={ROUTES.ADMIN}
+            />
+          )}
           <DynamicFormattedMessage
             id="home"
             tag={Button}

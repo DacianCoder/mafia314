@@ -19,8 +19,8 @@ export const useAuthListener = () => {
 
       const user = await generateUserDocument(userAuth)
       await registerUserToGame(user)
-      setIsLogged(true)
       localStorage.setItem(LOGGED_IN_COOKIE, JSON.stringify(user))
+      setIsLogged(true)
     })
   }, [])
 

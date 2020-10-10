@@ -2,5 +2,9 @@
   "signIn": "Sign in",
   "signOut": "Sign out",
   "home": "Home",
-  "appTitle": "Mafia 3.14"
+  "admin": "Admin",
+  "appTitle": "Mafia 3.14",
+  "users": "Users",
+  "map.muresHq": "Mures HQ",
+  "lateUsers": "Late users"
 }
