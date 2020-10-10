@@ -39,6 +39,7 @@
     "react-dom": "^16.13.1",
     "react-intl": "^4.7.6",
     "react-router-dom": "^5.2.0",
+    "recoil": "^0.0.13",
     "serve": "^11.3.2",
     "react-scripts": "^3.4.3",
     "start-server-and-test": "^1.11.5",

@@ -1,6 +1,7 @@
 import { IUser } from '../interfaces'
 import { LOGGED_IN_COOKIE } from '../api/constants'
 import { ROLE } from '../constants/game'
+import { IRealTimeDB } from '../api'
 
 /**
  * Return value stored at {@param itemPath} on {@link localStorage}
@@ -78,19 +79,30 @@ export const getOrConcantUser = (users: IUser[] = [], user: IUser): IUser[] => {
   return users
 }
 
-/**
- * Move user with given uid from array {@param from} to array {@param to}
- * @param uid
- * @param from
- * @param to
- */
-export const moveUserFromTo = (
-  uid: string,
-  from: IUser[] = [],
-  to: IUser[] = []
-): [IUser[], IUser[]] => {
-  const fromUser = getUserWithId(from, uid)
-  if (fromUser && !getUserWithId(to, uid)) to.push(fromUser)
+export const updateUserPosition = (
+  maybeUser: IUser | null,
+  db: IRealTimeDB,
+  isBenched: boolean
+): IRealTimeDB => {
+  if (isBenched) {
+    return {
+      ...db,
+      users: [
+        ...(db.users || []),
+        getUserWithId(db.lateUsers, maybeUser?.uid!)!,
+      ],
+      lateUsers: db.lateUsers.filter(
+        (user) => !(user && user.uid === maybeUser?.uid)
+      ),
+    }
+  }
 
-  return [from.filter((user) => !(user && uid === user.uid)), to]
+  return {
+    ...db,
+    lateUsers: [
+      ...(db.lateUsers || []),
+      getUserWithId(db.users, maybeUser?.uid!)!,
+    ],
+    users: db.users.filter((user) => !(user && user.uid === maybeUser?.uid)),
+  }
 }

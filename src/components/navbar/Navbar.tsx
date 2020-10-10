@@ -24,15 +24,13 @@ export const Navbar: React.FC = () => {
             <DynamicFormattedMessage
               id="admin"
               tag={Button}
-              component={NavLink}
-              to={ROUTES.ADMIN}
+              onClick={() => history.push(ROUTES.ADMIN)}
             />
           )}
           <DynamicFormattedMessage
             id="home"
             tag={Button}
-            component={NavLink}
-            to={ROUTES.HOME}
+            onClick={() => history.push(ROUTES.HOME)}
           />
 
           <DynamicFormattedMessage
