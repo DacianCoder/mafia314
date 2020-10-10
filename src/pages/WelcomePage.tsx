@@ -4,7 +4,6 @@ import Typography from '@material-ui/core/Typography'
 import { Box } from '@material-ui/core'
 import DynamicFormattedMessage from '../components/common/ui/DynamicFormattedMessage'
 import { getCookieSliceOr } from '../utils'
-import { LOGGED_IN_COOKIE } from '../api/constants'
 import { signInWithGoogle } from '../api/auth'
 
 const piLogo = require('../assets/img/pi.png')
@@ -12,7 +11,7 @@ const piLogo = require('../assets/img/pi.png')
 export const WelcomePage: FC = () => {
   const history = useHistory()
 
-  const isUserLogged = getCookieSliceOr(LOGGED_IN_COOKIE)
+  const isUserLogged = getCookieSliceOr()
 
   if (isUserLogged) {
     return null

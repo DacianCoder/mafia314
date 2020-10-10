@@ -15,3 +15,10 @@ export enum REALTIME_DB {
   GAME_CONFIG = 'gameConfig',
   LATE_USERS = 'lateUsers',
 }
+
+export enum REALTIME_SLICE {
+  GAME_ROUND = 'round',
+  GAME_HACKER_COUNT = 'hackerCount',
+  GAME_QA_COUNT = 'qaCount',
+  GAME_MAP = 'mapId',
+}

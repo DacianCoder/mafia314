@@ -1,9 +1,24 @@
 import firebase from 'firebase'
 import { COLLECTION, REALTIME_DB } from './constants'
 import { fireDB, firestore } from './config'
-import { getOrConcantUser, mapGoogleUser } from '../utils'
+import {
+  getOrConcantUser,
+  getUserWithId,
+  mapGoogleUser,
+  moveUserFromTo,
+} from '../utils'
 import { IUser } from '../interfaces'
-import { GAME_NOT_STARTED } from '../constants/game'
+import {
+  GAME_NOT_STARTED,
+  IGameConfig,
+  INITIAL_GAME_CONFIG,
+} from '../constants/game'
+
+interface IRealTimeDB {
+  users: IUser[]
+  gameConfig: IGameConfig
+  lateUsers: IUser[]
+}
 
 /**
  * Creates a new user if user hasn't logged in before
@@ -43,17 +58,20 @@ export const registerUserToGame = async (user?: IUser) => {
   if (!user) {
     return
   }
-  const config = (await fireDB.ref(REALTIME_DB.GAME_CONFIG).once('value')).val()
-  if (config?.round === GAME_NOT_STARTED) {
-    await fireDB
-      .ref(REALTIME_DB.USERS)
-      .transaction((users) => getOrConcantUser(users, user))
-    return
-  }
 
-  await fireDB
-    .ref(REALTIME_DB.LATE_USERS)
-    .transaction((lateUsers) => getOrConcantUser(lateUsers, user))
+  await fireDB.ref().transaction((db: IRealTimeDB) => {
+    if (!db) {
+      return null
+    }
+    const shouldAddUserToGame =
+      !getUserWithId(db.lateUsers, user.uid) &&
+      (!db.gameConfig || db.gameConfig?.round === GAME_NOT_STARTED)
+
+    if (shouldAddUserToGame) {
+      return { ...db, users: getOrConcantUser(db.users, user) }
+    }
+    return { ...db, lateUsers: getOrConcantUser(db.lateUsers, user) }
+  })
 }
 
 /**
