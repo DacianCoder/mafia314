@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 import { Navbar } from './components/navbar/Navbar'
 import { WelcomePage } from './pages/WelcomePage'
@@ -8,18 +8,19 @@ import { ROUTES } from './constants/routes'
 import { HomePage } from './pages/HomePage'
 
 const App: React.FC = () => {
-  useAuthListener()
+  const isLogged = useAuthListener()
+
+  if (!isLogged) {
+    return <WelcomePage />
+  }
 
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
-      <div>
-        <Switch>
-          <Route path={ROUTES.WELCOME} component={WelcomePage} exact />
-          <Route path={ROUTES.HOME} component={HomePage} exact />
-        </Switch>
-      </div>
-    </BrowserRouter>
+      <Switch>
+        <Route path={ROUTES.HOME} component={HomePage} exact />
+      </Switch>
+    </>
   )
 }
 

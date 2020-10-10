@@ -53,7 +53,7 @@
     "eject": "react-scripts eject",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "test:e2e": "start-server-and-test \"PORT=3099 npm start\" 3099 cy:open",
+    "test:e2e": "start-server-and-test \"PORT=3099 npm run dev\" 3099 cy:open",
     "test:e2e:ci": "START_SERVER_AND_TEST_INSECURE=1 start-server-and-test \"PORT=3099 npm start\" 3099 cy:run",
     "test:coverage": "react-scripts test --updateSnapshot --watchAll=false --env=jsdom --coverage",
     "test:mutation": "stryker run",

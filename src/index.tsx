@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
+import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
@@ -13,13 +14,12 @@ import theme from './config/theme'
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
-    <IntlProvider locale="en" messages={messages}>
-      <CssBaseline />
-      <App />
-    </IntlProvider>
+    <BrowserRouter>
+      <IntlProvider locale="en" messages={messages}>
+        <CssBaseline />
+        <App />
+      </IntlProvider>
+    </BrowserRouter>
   </ThemeProvider>,
   document.getElementById('root')
 )
-
-// @ts-ignore Add store on window when running e2e tests
-if (window.Cypress) window.store = store
