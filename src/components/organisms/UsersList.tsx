@@ -20,7 +20,7 @@ export function UsersList({
 }: {
   classes: any
   list: IUser[]
-  listResource: REALTIME_DB
+  listResource?: REALTIME_DB
 }) {
   const [hoveredUid, setHoveredUid] = useState<string | null>(null)
 
@@ -42,9 +42,11 @@ export function UsersList({
             onMouseOver={() => setHoveredUid(user.uid)}
             onMouseLeave={() => setHoveredUid(null)}
           >
-            {(hoveredUid !== user.uid && (
+            {hoveredUid === user.uid && listResource ? (
+              <DeleteIcon onClick={onRemoveUser} />
+            ) : (
               <Avatar alt={user.displayName} src={user.photoURL} />
-            )) || <DeleteIcon onClick={onRemoveUser} />}
+            )}
           </Box>
           <Box display="flex" justifyContent="center">
             <ListItemText

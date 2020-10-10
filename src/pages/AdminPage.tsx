@@ -1,4 +1,5 @@
 import React from 'react'
+import { useRecoilValue } from 'recoil'
 import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -13,12 +14,12 @@ import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore'
 import { isUserAdmin } from '../utils'
 import { ROUTES } from '../constants/routes'
 import { REALTIME_DB } from '../api/constants'
-import { UsersList } from '../components/molecule/UsersList'
+import { UsersList } from '../components/organisms/UsersList'
 import DynamicFormattedMessage from '../components/common/ui/DynamicFormattedMessage'
-import { GameStatusBoard } from '../components/molecule/GameStatusBoard'
-import { useLoadGameData } from '../hooks/UseLoadGameData'
+import { GameStatusBoard } from '../components/organisms/GameStatusBoard'
 import { fireDB } from '../api/config'
 import { INITIAL_GAME_CONFIG } from '../constants/game'
+import { gameConfigAtom, lateUsersAtom, usersAtom } from '../recoil/atoms'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +38,9 @@ export function AdminPage() {
   const history = useHistory()
   const classes = useStyles()
 
-  const { users, lateUsers, gameConfig } = useLoadGameData()
+  const users = useRecoilValue(usersAtom)
+  const lateUsers = useRecoilValue(lateUsersAtom)
+  const gameConfig = useRecoilValue(gameConfigAtom)
 
   const onHardReset = async () => {
     await fireDB

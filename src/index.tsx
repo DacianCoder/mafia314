@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { RecoilRoot } from 'recoil'
 import { IntlProvider } from 'react-intl'
 import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from '@material-ui/core/styles'
@@ -14,12 +15,14 @@ import theme from './config/theme'
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
-    <BrowserRouter>
-      <IntlProvider locale="en" messages={messages}>
-        <CssBaseline />
-        <App />
-      </IntlProvider>
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter>
+        <IntlProvider locale="en" messages={messages}>
+          <CssBaseline />
+          <App />
+        </IntlProvider>
+      </BrowserRouter>
+    </RecoilRoot>
   </ThemeProvider>,
   document.getElementById('root')
 )

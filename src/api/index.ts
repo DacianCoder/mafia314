@@ -1,20 +1,11 @@
 import firebase from 'firebase'
 import { COLLECTION, REALTIME_DB } from './constants'
 import { fireDB, firestore } from './config'
-import {
-  getOrConcantUser,
-  getUserWithId,
-  mapGoogleUser,
-  moveUserFromTo,
-} from '../utils'
+import { getOrConcantUser, getUserWithId, mapGoogleUser } from '../utils'
 import { IUser } from '../interfaces'
-import {
-  GAME_NOT_STARTED,
-  IGameConfig,
-  INITIAL_GAME_CONFIG,
-} from '../constants/game'
+import { GAME_NOT_STARTED, IGameConfig } from '../constants/game'
 
-interface IRealTimeDB {
+export interface IRealTimeDB {
   users: IUser[]
   gameConfig: IGameConfig
   lateUsers: IUser[]
@@ -26,7 +17,7 @@ interface IRealTimeDB {
  * @param user
  */
 export const generateUserDocument = async (user: firebase.User) => {
-  if (!user) return
+  if (!user) return null
 
   const userRef = firestore.doc(`${COLLECTION.USERS}/${user.uid}`)
   const snapshot = await userRef.get()
@@ -38,6 +29,7 @@ export const generateUserDocument = async (user: firebase.User) => {
         uid,
         displayName,
         email,
+        isAdmin: false,
         photoURL,
       })
     } catch (error) {
@@ -54,7 +46,7 @@ export const generateUserDocument = async (user: firebase.User) => {
  *
  * @param user
  */
-export const registerUserToGame = async (user?: IUser) => {
+export const registerUserToGame = async (user: IUser | null) => {
   if (!user) {
     return
   }
@@ -70,6 +62,9 @@ export const registerUserToGame = async (user?: IUser) => {
     if (shouldAddUserToGame) {
       return { ...db, users: getOrConcantUser(db.users, user) }
     }
+    if (getUserWithId(db.users, user.uid)) {
+      return db
+    }
     return { ...db, lateUsers: getOrConcantUser(db.lateUsers, user) }
   })
 }
@@ -79,13 +74,14 @@ export const registerUserToGame = async (user?: IUser) => {
  *
  * @param uid
  */
-async function getUserDocument(uid: string): Promise<IUser | undefined> {
-  if (!uid) return
+async function getUserDocument(uid: string): Promise<IUser | null> {
+  if (!uid) return null
 
   try {
     const userDocument = await firestore.doc(`${COLLECTION.USERS}/${uid}`).get()
     return mapGoogleUser(userDocument.data())
   } catch (error) {
     console.error('Error fetching user', error)
+    return null
   }
 }

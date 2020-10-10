@@ -1,38 +1,40 @@
-import React, { createElement, FunctionComponent } from 'react'
+import React, { createElement, ReactHTML } from 'react'
 import { FormattedMessage } from 'react-intl'
 
-type ITag = 'span' | 'div' | 'button' | 'p' | 'label' | FunctionComponent<any>
-
-interface IDynamicFormattedMessage {
-  tag?: ITag
+interface IBase<T> {
+  tag?: keyof ReactHTML | React.FC<T>
   shouldRender?: boolean
   id: string
   defaultMessage?: string
   values?: any
-  [key: string]: any
 }
+
+type IDynamicFormattedMessage<T> = IBase<T> &
+  {
+    [K in keyof T]: T[K]
+  }
 
 /**
  * Atom component used to render an intl message having as a wrapper a given tag
  *
- * @param className
  * @param tag
- * @param props
+ * @param shouldRender
+ * @param dynamicProps
  * @constructor
  */
-const DynamicFormattedMessage = ({
-  tag = 'span',
+function DynamicFormattedMessage<P extends object>({
+  tag = undefined,
   shouldRender = true,
   ...dynamicProps
-}: IDynamicFormattedMessage) => {
+}: IDynamicFormattedMessage<P>) {
   if (!shouldRender) return null
 
   const { defaultMessage, id, values, ...parentProps } = dynamicProps
   const messageProps = { defaultMessage, id, values: dynamicProps.values }
 
-  return createElement(
+  return createElement<P>(
     tag || 'span',
-    parentProps,
+    parentProps as P,
     <FormattedMessage {...messageProps} />
   )
 }

@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react'
-import { IUser } from '../interfaces'
+import { useEffect } from 'react'
+import { useRecoilState } from 'recoil'
 import { IGameConfig, INITIAL_GAME_CONFIG } from '../constants/game'
 import { fireDB } from '../api/config'
 import { REALTIME_DB } from '../api/constants'
+import { gameConfigAtom, lateUsersAtom, usersAtom } from '../recoil/atoms'
 
 /**
  * Load all data required by {@link AdminPage}
  */
 export function useLoadGameData() {
-  const [users, setUsers] = useState<IUser[]>([])
-  const [lateUsers, setLateUsers] = useState([])
-  const [gameConfig, setGameConfig] = useState<IGameConfig | null>(null)
+  const setUsers = useRecoilState(usersAtom)[1]
+  const setLateUsers = useRecoilState(lateUsersAtom)[1]
+  const setGameConfig = useRecoilState(gameConfigAtom)[1]
 
   useEffect(() => {
     setTimeout(
@@ -39,7 +40,11 @@ export function useLoadGameData() {
 
     const onChangeGameConfig = fireDB
       .ref(REALTIME_DB.GAME_CONFIG)
-      .on('value', (config) => setGameConfig(config.val() || null))
+      .on('value', (config) => {
+        setGameConfig((lastGameConfig) => {
+          return config.val() || lastGameConfig
+        })
+      })
 
     return () => {
       fireDB.ref(REALTIME_DB.USERS).off('value', onChangeUsers)
@@ -47,6 +52,4 @@ export function useLoadGameData() {
       fireDB.ref(REALTIME_DB.GAME_CONFIG).off('value', onChangeGameConfig)
     }
   }, [])
-
-  return { users, lateUsers, gameConfig }
 }
