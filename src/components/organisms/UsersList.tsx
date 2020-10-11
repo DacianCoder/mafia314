@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  CircularProgress,
   GridList,
   GridListTile,
   ListItemText,
@@ -12,6 +13,11 @@ import React, { useState } from 'react'
 import { IUser } from '../../interfaces'
 import { fireDB } from '../../api/config'
 import { REALTIME_DB } from '../../api/constants'
+import SwapVerticalCircleIcon from '@material-ui/icons/SwapVerticalCircle'
+import { updateUserPosition } from '../../utils'
+import { IRealTimeDB } from '../../api'
+import { useRecoilValue } from 'recoil'
+import { loggedUserAtom } from '../../recoil/atoms'
 
 export function UsersList({
   classes,
@@ -22,6 +28,7 @@ export function UsersList({
   list: IUser[]
   listResource?: REALTIME_DB
 }) {
+  const loggedUser = useRecoilValue(loggedUserAtom)
   const [hoveredUid, setHoveredUid] = useState<string | null>(null)
 
   const onRemoveUser = async () => {
@@ -30,6 +37,17 @@ export function UsersList({
       .transaction((array) =>
         array.filter(({ uid }: IUser) => hoveredUid !== uid)
       )
+  }
+
+  const onSwitch = async (user: IUser) => {
+    await fireDB.ref().transaction((db: IRealTimeDB) => {
+      if (!db) return null
+      return updateUserPosition(
+        user,
+        db,
+        listResource === REALTIME_DB.LATE_USERS
+      )
+    })
   }
 
   return (
@@ -43,7 +61,10 @@ export function UsersList({
             onMouseLeave={() => setHoveredUid(null)}
           >
             {hoveredUid === user.uid && listResource ? (
-              <DeleteIcon onClick={onRemoveUser} />
+              <div>
+                <DeleteIcon onClick={onRemoveUser} />
+                <SwapVerticalCircleIcon onClick={() => onSwitch(user)} />
+              </div>
             ) : (
               <Avatar alt={user.displayName} src={user.photoURL} />
             )}
