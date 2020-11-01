@@ -53,18 +53,16 @@ export function HomePage() {
   }
 
   const isGameStarted = gameConfig && gameConfig.round > GAME_NOT_STARTED
-
-  if (isGameStarted) {
-    return <Game />
-  }
-
   const isUserBenched = getUserWithId(lateUsers, loggedUser?.uid || '')
-
   const onSwitch = async () => {
     await fireDB.ref().transaction((db: IRealTimeDB) => {
       if (!db) return null
       return updateUserPosition(loggedUser, db, !!isUserBenched)
     })
+  }
+
+  if (isGameStarted) {
+    return <Game />
   }
 
   return (
